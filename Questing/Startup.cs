@@ -6,8 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Questing.Data.DAL;
+using Questing.Data.IDAL;
+using Questing.Data.SqlDatabaseService;
+using Questing.IServices;
+using Questing.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,6 +32,8 @@ namespace Questing
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSqlDatabaseService();
+            services.AddScoped<IUserQuestService, UserQuestService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +54,16 @@ namespace Questing
             {
                 endpoints.MapControllers();
             });
+        }
+    }
+
+    public static class ServiceCollectionExtensions
+    {
+        public static void AddSqlDatabaseService(this IServiceCollection services)
+        {
+            services.AddScoped<IDatabaseService, DatabaseService>();
+            services.AddScoped<IQuestDAL, QuestDAL>();
+            services.AddScoped<IQuestPointTransactionDAL, QuestPointTransactionDAL>();
         }
     }
 }

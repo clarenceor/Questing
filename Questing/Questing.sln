@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Questing", "Questing.csproj", "{935C3200-B578-4406-80FC-5AB53C619DA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Questing.Test", "..\Questing.Test\Questing.Test.csproj", "{82E6F33B-CBA8-4109-BD25-DF38391DEDD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Questing.Test", "..\Questing.Test\Questing.Test.csproj", "{82E6F33B-CBA8-4109-BD25-DF38391DEDD7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Questing.Data", "..\Questing.Data\Questing.Data.csproj", "{DB33C70E-4020-4288-AFF0-E82133CF2177}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{82E6F33B-CBA8-4109-BD25-DF38391DEDD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82E6F33B-CBA8-4109-BD25-DF38391DEDD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82E6F33B-CBA8-4109-BD25-DF38391DEDD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB33C70E-4020-4288-AFF0-E82133CF2177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB33C70E-4020-4288-AFF0-E82133CF2177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB33C70E-4020-4288-AFF0-E82133CF2177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB33C70E-4020-4288-AFF0-E82133CF2177}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

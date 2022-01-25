@@ -2,9 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Questing.IServices;
-using Questing.Model.Response;
-using Questing.Request;
-using Questing.Response;
+using Questing.Data.Model.Response;
+using Questing.Data.Model.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -9,6 +9,6 @@ namespace Questing.Data.IDAL
     public interface IQuestPointTransactionDAL
     {
         decimal? GetTotalActiveQuestPointByPlayerId(string PlayerId);
-        bool SaveQuestPointTransaction(decimal QuestPointEarned, string PlayerId);
+        bool SaveQuestPointTransaction(decimal QuestPointEarned, string PlayerId, decimal QuestPointPerMilestone, int numOfMilestone);
     }
 }

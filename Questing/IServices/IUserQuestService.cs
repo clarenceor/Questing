@@ -1,6 +1,6 @@
-﻿using Questing.Model.MileStone;
-using Questing.Model.Response;
-using Questing.Request;
+﻿using Questing.Data.Model.MileStone;
+using Questing.Data.Model.Response;
+using Questing.Data.Model.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;

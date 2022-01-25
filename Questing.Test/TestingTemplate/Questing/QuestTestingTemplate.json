@@ -1,0 +1,23 @@
+[
+	{
+		"RequestSequence" : 1,
+        "RequestUrl" : "api/progress",
+        "RequestType" : "POST", 
+        "RequestJson" : "{\"PlayerId\": \"12345678\", \"PlayerLevel\": 1, \"ChipAmountBet\": 105}", 
+        "ExpectedResponseJson" : "{\"code\": 200,\"content\": {\"questPointsEarned\": 211,\"totalQuestPercentCompleted\": 100,\"milestonesCompleted\": [{\"milestoneIndex\": 0,\"chipsAwarded\": 50},{\"milestoneIndex\": 1,\"chipsAwarded\": 50},{\"milestoneIndex\": 2,\"chipsAwarded\": 50},{\"milestoneIndex\": 3,\"chipsAwarded\": 50},{\"milestoneIndex\": 4,\"chipsAwarded\": 50}]}}"
+	},
+	{
+		"RequestSequence" : 2,
+        "RequestUrl" : "api/state?PlayerId=12345678",
+        "RequestType" : "GET", 
+        "RequestJson" : "", 
+        "ExpectedResponseJson" : "{\"code\": 200,\"content\": {\"totalQuestPercentCompleted\": 100,\"lastMilestoneIndexCompleted\": 4}}"
+	},
+	{
+		"RequestSequence" : 3,
+        "RequestUrl" : "api/state?PlayerId=12345678",
+        "RequestType" : "GET", 
+        "RequestJson" : "", 
+        "ExpectedResponseJson" : "{\"code\": 200,\"content\": {\"totalQuestPercentCompleted\": 100,\"lastMilestoneIndexCompleted\": 5}}"
+	}
+]

@@ -1,10 +1,9 @@
-﻿using Questing.Model.Request;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Questing.Request
+namespace Questing.Data.Model.Request
 {
     public class GetUserQuestProgressReq : BasicRequest
     {

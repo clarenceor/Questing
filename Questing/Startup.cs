@@ -63,6 +63,7 @@ namespace Questing
         {
             services.AddScoped<IDatabaseService, DatabaseService>();
             services.AddScoped<IQuestDAL, QuestDAL>();
+            services.AddScoped<IPlayerMilestoneDAL, PlayerMilestoneDAL>();
             services.AddScoped<IQuestPointTransactionDAL, QuestPointTransactionDAL>();
         }
     }

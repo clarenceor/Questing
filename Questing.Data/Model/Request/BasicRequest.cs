@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Questing.Model.Request
+namespace Questing.Data.Model.Request
 {
     public class BasicRequest
     {

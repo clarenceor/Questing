@@ -13,8 +13,8 @@ namespace Questing.Data.DAL
 {
     public class QuestDAL : IQuestDAL
     {
-        IConfiguration _configuration;
-        IDatabaseService _databaseService;
+        private readonly IConfiguration _configuration;
+        private readonly IDatabaseService _databaseService;
 
         public QuestDAL(IDatabaseService databaseService, IConfiguration configuration)
         {

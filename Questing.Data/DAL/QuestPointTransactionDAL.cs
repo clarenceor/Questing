@@ -13,20 +13,21 @@ namespace Questing.Data.DAL
 {
     public class QuestPointTransactionDAL : IQuestPointTransactionDAL
     {
-        IConfiguration _configuration;
-        IDatabaseService _databaseService;
-        IQuestDAL _questdal;
+        private readonly IConfiguration _configuration;
+        private readonly IDatabaseService _databaseService;
+        private readonly IQuestDAL _questdal;
+        private string ConnectionString;
 
         public QuestPointTransactionDAL(IDatabaseService databaseService, IConfiguration configuration, IQuestDAL questDAL)
         {
             _configuration = configuration;
             _databaseService = databaseService;
             _questdal = questDAL;
+            ConnectionString = _configuration.GetConnectionString("QuestingDatabaseConnection");
         }
 
         public decimal? GetTotalActiveQuestPointByPlayerId(string PlayerId)
         {
-            string ConnectionString = _configuration.GetConnectionString("QuestingDatabaseConnection");
             int? Questid = _questdal.GetActiveQuestId();
 
             if (Questid == null)
@@ -35,18 +36,18 @@ namespace Questing.Data.DAL
             }
             else
             {
-                string SQL = $"SELECT SUM(quest_point_earned) quest_point_accumulate FROM QuestPointTransaction WHERE player_id = @player_id AND quest_id = @quest_id group by player_id, quest_id ";
+                string SQL = $"SELECT SUM(quest_point_earned) quest_point_accumulate FROM QuestPointTransaction WHERE player_id = @PlayerId AND quest_id = @Questid group by player_id, quest_id ";
                 List<SqlParameter> param = new List<SqlParameter>();
                 param.Add(new SqlParameter
                 {
-                    ParameterName = "@player_id",
+                    ParameterName = "@PlayerId",
                     Value = PlayerId,
                     DbType = DbType.String
                 });
 
                 param.Add(new SqlParameter
                 {
-                    ParameterName = "@quest_id",
+                    ParameterName = "@Questid",
                     Value = Questid,
                     DbType = DbType.Int32
                 });
@@ -59,11 +60,18 @@ namespace Questing.Data.DAL
             }
         }
 
-        public bool SaveQuestPointTransaction(decimal QuestPointEarned, string PlayerId)
+        public bool SaveQuestPointTransaction(decimal QuestPointEarned, string PlayerId, decimal QuestPointPerMilestone, int numOfMilestone)
         {
             string ConnectionString = _configuration.GetConnectionString("QuestingDatabaseConnection");
-            string SQL = $"EXEC sp_AddQuestPointTransaction @PlayerId, @QuestPointEarned";
+            string SQL = $"EXEC sp_AddQuestPointTransaction @PlayerId, @QuestPointEarned, @QuestPointPerMilestone, @MaxMilestonePerQuest";
             List<SqlParameter> param = new List<SqlParameter>();
+
+            param.Add(new SqlParameter
+            {
+                ParameterName = "@PlayerId",
+                Value = PlayerId,
+                DbType = DbType.String
+            });
 
             param.Add(new SqlParameter
             {
@@ -74,9 +82,16 @@ namespace Questing.Data.DAL
 
             param.Add(new SqlParameter
             {
-                ParameterName = "@PlayerId",
-                Value = PlayerId,
-                DbType = DbType.String
+                ParameterName = "@QuestPointPerMilestone",
+                Value = QuestPointPerMilestone,
+                DbType = DbType.Decimal
+            });
+
+            param.Add(new SqlParameter
+            {
+                ParameterName = "@MaxMilestonePerQuest",
+                Value = numOfMilestone,
+                DbType = DbType.Int32
             });
 
             var returnData = _databaseService.ExecuteNonQuery(ConnectionString, SQL, param, CommandType.Text);

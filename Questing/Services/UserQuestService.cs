@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Questing.Data.IDAL;
 using Questing.IServices;
-using Questing.Model.MileStone;
-using Questing.Model.Response;
-using Questing.Request;
+using Questing.Data.Model.MileStone;
+using Questing.Data.Model.Response;
+using Questing.Data.Model.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,23 +14,27 @@ namespace Questing.Services
     public class UserQuestService : IUserQuestService
     {
         private readonly IQuestPointTransactionDAL _questTrans;
+        private readonly IPlayerMilestoneDAL _playerMilestone;
         private readonly IConfiguration _configuration;
 
-        public UserQuestService(IQuestPointTransactionDAL questTrans, IConfiguration configuration)
+        public UserQuestService(IQuestPointTransactionDAL questTrans, IPlayerMilestoneDAL playerMilestone, IConfiguration configuration)
         {
             _questTrans = questTrans;
             _configuration = configuration;
+            _playerMilestone = playerMilestone;
         }
 
         public GetUserQuestProgressRes GetUserQuestProgress(GetUserQuestProgressReq req)
         {
+            int numOfMilestone = (int)_configuration.GetValue(typeof(int), "NumOfMilestone");
             decimal rateFromBet = (decimal)_configuration.GetValue(typeof(decimal), "RateFromBet");
             decimal levelBonusRate = (decimal)_configuration.GetValue(typeof(decimal), "LevelBonusRate");
-          
+            decimal questPointPerMileStone = (decimal)_configuration.GetValue(typeof(decimal), "QuestPointCompleteMilestone");
+            
             decimal QuestEarned = req.ChipAmountBet * rateFromBet + req.PlayerLevel * levelBonusRate;
             decimal? QuestPointAccumulated = 0m;
 
-            bool savedSuccess = _questTrans.SaveQuestPointTransaction(QuestEarned, req.PlayerId);
+            bool savedSuccess = _questTrans.SaveQuestPointTransaction(QuestEarned, req.PlayerId, questPointPerMileStone, numOfMilestone);
 
             decimal? QuestCompletionPercentage = GetTotalQuestPercentCompleted(req.PlayerId, out QuestPointAccumulated);
 
@@ -40,7 +44,7 @@ namespace Questing.Services
                 {
                     QuestPointsEarned = QuestEarned,
                     TotalQuestPercentCompleted = QuestCompletionPercentage.Value,
-                    MilestonesCompleted = GetMilestoneCompleted(QuestPointAccumulated.Value)
+                    MilestonesCompleted = GetMilestoneCompleted(req.PlayerId)
                 };
 
                 return ProgressRes;
@@ -61,7 +65,7 @@ namespace Questing.Services
                 GetUserQuestStateRes StateRes = new GetUserQuestStateRes
                 {
                     TotalQuestPercentCompleted = QuestCompletionPercentage.Value,
-                    LastMilestoneIndexCompleted = GetLastMilestoneIndexCompleted(QuestPointAccumulated.Value)
+                    LastMilestoneIndexCompleted = GetLastMilestoneIndexCompleted(PlayerId)
                 };
 
                 return StateRes;
@@ -72,33 +76,20 @@ namespace Questing.Services
             }
         }
 
-        private List<Milestone> GetMilestoneCompleted(decimal QuestPointAccumulated)
+        private List<Milestone> GetMilestoneCompleted(string PlayerId)
         {
             int chipsAwardedMilestoneCompletion = (int)_configuration.GetValue(typeof(int), "MilestoneChipsAward");
-            decimal rateFromBet = (decimal)_configuration.GetValue(typeof(decimal), "QuestPointCompleteMilestone");
-            
-            List<Milestone> milestones = new List<Milestone>();
-            decimal questPointCompute = QuestPointAccumulated;
-            int mileStoneCompletionIndex = 0;
-            
-            while ((questPointCompute -= rateFromBet) > 0)
-            {
-                milestones.Add(new Milestone
-                {
-                    ChipsAwarded = chipsAwardedMilestoneCompletion,
-                    MilestoneIndex = mileStoneCompletionIndex++
-                });
-            }
+
+            List<Milestone> milestones = _playerMilestone.GetMilestoneCompletedByPlayerId(PlayerId, chipsAwardedMilestoneCompletion);
 
             return milestones;
         }
 
-        private int? GetLastMilestoneIndexCompleted(decimal QuestPointAccumulated)
+        private int? GetLastMilestoneIndexCompleted(string PlayerId)
         {
-            decimal QuestPointMilestoneRequired = (decimal)_configuration.GetValue(typeof(decimal), "QuestPointCompleteMilestone");
-            int MilestoneIndex = ((int) Math.Floor(QuestPointAccumulated / QuestPointMilestoneRequired)) - 1;
+            int? MilestoneIndex = _playerMilestone.GetMilestoneIndexLastCompletedByPlayerId(PlayerId);
 
-            return MilestoneIndex < 0 ? null : MilestoneIndex;
+            return MilestoneIndex;
         }
 
         private decimal? GetTotalQuestPercentCompleted(string PlayerId, out decimal? Accumulated)

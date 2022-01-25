@@ -1,0 +1,11 @@
+SET ANSI_PADDING ON
+GO
+
+/****** Object:  Index [NonClusteredIndex-20220123-011122]    Script Date: 24/1/2022 18:33:31 ******/
+CREATE NONCLUSTERED INDEX [NonClusteredIndex-20220123-011122] ON [dbo].[QuestPointTransaction]
+(
+	[quest_id] ASC,
+	[player_id] ASC,
+	[quest_point_earned] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
